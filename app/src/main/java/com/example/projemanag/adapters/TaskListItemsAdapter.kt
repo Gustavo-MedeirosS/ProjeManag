@@ -13,19 +13,24 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.cardview.widget.CardView
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.projemanag.R
 import com.example.projemanag.activities.TaskListActivity
 import com.example.projemanag.models.Task
+import java.util.Collections
 
 class TaskListItemsAdapter(
     private val context: Context,
     private val tasks: ArrayList<Task>
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    inner class TasksViewHolder(view: View) : RecyclerView.ViewHolder(view)
+    private var mPositionDraggedFrom = -1
+    private var mPositionDraggedTo = -1
 
+    inner class TasksViewHolder(view: View) : RecyclerView.ViewHolder(view)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val view = LayoutInflater.from(context).inflate(R.layout.item_task, parent, false)
@@ -41,7 +46,10 @@ class TaskListItemsAdapter(
     }
 
     @SuppressLint("CutPasteId")
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, @SuppressLint("RecyclerView") position: Int) {
+    override fun onBindViewHolder(
+        holder: RecyclerView.ViewHolder,
+        @SuppressLint("RecyclerView") position: Int
+    ) {
         val model = tasks[position]
 
         if (holder is TasksViewHolder) {
@@ -163,10 +171,68 @@ class TaskListItemsAdapter(
                 CardListItemsAdapter.OnClickListener {
                 override fun onClick(cardPosition: Int) {
                     if (context is TaskListActivity) {
-                        context.cardDetails(taskListPosition = position, cardPosition = cardPosition)
+                        context.cardDetails(
+                            taskListPosition = position,
+                            cardPosition = cardPosition
+                        )
                     }
                 }
             })
+
+            val dividerItemDecoration =
+                DividerItemDecoration(context, DividerItemDecoration.VERTICAL)
+            holder.itemView.findViewById<RecyclerView>(R.id.rv_card_list)
+                .addItemDecoration(dividerItemDecoration)
+
+            val helper = ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(
+                ItemTouchHelper.UP or ItemTouchHelper.DOWN,
+                0
+            ) {
+                override fun onMove(
+                    recyclerView: RecyclerView,
+                    dragged: RecyclerView.ViewHolder,
+                    target: RecyclerView.ViewHolder
+                ): Boolean {
+                    val draggedPosition = dragged.adapterPosition
+                    val targetPosition = target.adapterPosition
+
+                    if (mPositionDraggedFrom == -1) {
+                        mPositionDraggedFrom = draggedPosition
+                    }
+                    mPositionDraggedTo = targetPosition
+                    Collections.swap(tasks[position].cards, draggedPosition, targetPosition)
+
+                    adapter.notifyItemMoved(draggedPosition, targetPosition)
+                    return false
+                }
+
+                override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+
+                }
+
+                override fun clearView(
+                    recyclerView: RecyclerView,
+                    viewHolder: RecyclerView.ViewHolder
+                ) {
+                    super.clearView(recyclerView, viewHolder)
+
+                    if (
+                        mPositionDraggedFrom != -1 &&
+                        mPositionDraggedTo != -1 &&
+                        mPositionDraggedFrom != mPositionDraggedTo
+                    ) {
+                        (context as TaskListActivity).updateCardsInTaskList(
+                            taskListPosition = position,
+                            cards = tasks[position].cards
+                        )
+                    }
+
+                    mPositionDraggedFrom = -1
+                    mPositionDraggedTo = -1
+                }
+            })
+
+            helper.attachToRecyclerView(holder.itemView.findViewById(R.id.rv_card_list))
         }
     }
 

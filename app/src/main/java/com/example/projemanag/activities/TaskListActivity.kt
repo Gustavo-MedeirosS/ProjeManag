@@ -123,6 +123,15 @@ class TaskListActivity : BaseActivity() {
         FirestoreHandler().addUpdateTaskList(activity = this, board = mBoardDetails)
     }
 
+    fun updateCardsInTaskList(taskListPosition: Int, cards: ArrayList<Card>) {
+        mBoardDetails.taskList.removeAt(mBoardDetails.taskList.size - 1)
+        mBoardDetails.taskList[taskListPosition].cards = cards
+
+        showProgressDialog()
+
+        FirestoreHandler().addUpdateTaskList(activity = this, board = mBoardDetails)
+    }
+
     fun deleteTaskList(position: Int) {
         mBoardDetails.taskList.removeAt(position)
         mBoardDetails.taskList.removeAt(mBoardDetails.taskList.size - 1)
