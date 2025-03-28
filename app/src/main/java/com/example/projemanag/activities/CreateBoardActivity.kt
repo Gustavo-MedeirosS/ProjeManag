@@ -50,6 +50,8 @@ class CreateBoardActivity : BaseActivity() {
                 createBoard()
             }
         }
+
+        window.statusBarColor = ContextCompat.getColor(this, R.color.colorAccent)
     }
 
     private fun setupActionBar() {

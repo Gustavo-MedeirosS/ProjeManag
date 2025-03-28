@@ -8,6 +8,7 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.projemanag.R
 import com.example.projemanag.adapters.MemberListItemsAdapter
@@ -43,6 +44,8 @@ class MembersActivity : BaseActivity() {
             activity = this,
             assignedTo = mBoardDetails.assignedTo
         )
+
+        window.statusBarColor = ContextCompat.getColor(this, R.color.colorAccent)
     }
 
     private fun setupActionBar() {

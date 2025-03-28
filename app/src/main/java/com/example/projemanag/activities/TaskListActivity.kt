@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import androidx.activity.enableEdgeToEdge
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.projemanag.R
 import com.example.projemanag.adapters.TaskListItemsAdapter
@@ -38,6 +39,8 @@ class TaskListActivity : BaseActivity() {
 
         showProgressDialog()
         FirestoreHandler().getBoardDetails(activity = this, documentId = mBoardDocumentId)
+
+        window.statusBarColor = ContextCompat.getColor(this, R.color.colorAccent)
     }
 
     fun cardDetails(taskListPosition: Int, cardPosition: Int) {

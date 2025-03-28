@@ -9,6 +9,7 @@ import android.view.View
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.widget.Toolbar
+import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -57,6 +58,9 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
             intent.putExtra(Constants.NAME, mUsername)
             startActivityForResult(intent, CREATE_BOARD_REQUEST_CODE)
         }
+
+
+        window.statusBarColor = ContextCompat.getColor(this, R.color.colorAccent)
     }
 
     fun populateBoardsListToUI(boards: ArrayList<Board>) {

@@ -9,6 +9,7 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.projemanag.R
 import com.example.projemanag.adapters.CardMemberListItemsAdapter
@@ -86,6 +87,8 @@ class CardDetailsActivity : BaseActivity() {
         binding?.tvSelectDueDate?.setOnClickListener {
             showDataPicker()
         }
+
+        window.statusBarColor = ContextCompat.getColor(this, R.color.colorAccent)
     }
 
     private fun setupActionBar() {

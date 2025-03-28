@@ -62,6 +62,8 @@ class MyProfileActivity : BaseActivity() {
         binding?.btnUpdate?.setOnClickListener {
             updateUserProfileData()
         }
+
+        window.statusBarColor = ContextCompat.getColor(this, R.color.colorAccent)
     }
 
     private fun setupActionBar() {
